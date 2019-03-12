@@ -153,6 +153,10 @@ closure_js_library(
         "*_test.js",
     ]),
     deps = [
+        "//javascript/hybrid",
+        "//javascript:crypto_format",
+        "//javascript:keyset_handle",
+        "//javascript:primitive_set",
         "//proto:aes_ctr_closure_proto",
         "//proto:common_closure_proto",
         "//proto:ecies_aead_hkdf_closure_proto",
