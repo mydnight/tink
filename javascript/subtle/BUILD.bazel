@@ -4,7 +4,7 @@ package(
 
 licenses(["notice"])  # Apache 2.0
 
-load("@io_bazel_rules_closure//closure:defs.bzl", "closure_js_library")
+load("@io_bazel_rules_closure//closure:defs.bzl", "closure_js_library", "closure_js_test")
 
 closure_js_library(
     name = "subtle",
@@ -101,16 +101,29 @@ closure_js_library(
 
 # test
 
-closure_js_library(
+closure_js_test(
     name = "test_lib",
     testonly = 1,
     srcs = glob([
         "*_test.js",
-    ]) + [
-        ":wycheproof_ecdh_testvectors",
-        ":wycheproof_ecdsa_testvectors",
-    ],
+    ]),
+    entry_points = {
+        "aes_ctr_test.js": ["tink.subtle.AesCtrTest"],
+        "aes_gcm_test.js": ["tink.subtle.AesGcmTest"],
+        "bytes_test.js": ["tink.subtle.BytesTest"],
+        "ecdsa_sign_test.js": ["tink.subtle.EcdsaSignTest"],
+        "ecdsa_verify_test.js": ["tink.subtle.EcdsaVerifyTest"],
+        "ecies_aead_hkdf_hybrid_decrypt_test.js": ["tink.subtle.EciesAeadHkdfHybridDecryptTest"],
+        "ecies_aead_hkdf_hybrid_encrypt_test.js": ["tink.subtle.EciesAeadHkdfHybridEncryptTest"],
+        "ecies_hkdf_kem_recipient_test.js": ["tink.subtle.EciesHkdfKemRecipientTest"],
+        "ecies_hkdf_kem_sender_test.js": ["tink.subtle.EciesHkdfKemSenderTest"],
+        "elliptic_curves_test.js": ["tink.subtle.EllipticCurvesTest"],
+        "encrypt_then_authenticate_test.js": ["tink.subtle.EncryptThenAuthenticateTest"],
+        "hkdf_test.js": ["tink.subtle.HkdfTest"],
+        "hmac_test.js": ["tink.subtle.HmacTest"],
+    },
     deps = [
+        ":wycheproof_testvectors",
         "//javascript/aead",
         "//javascript/hybrid",
         "//javascript:registry",
@@ -123,6 +136,15 @@ closure_js_library(
         "@io_bazel_rules_closure//closure/library",
         "@io_bazel_rules_closure//closure/library:testing",
         "@io_bazel_rules_closure//closure/library/useragent",
+    ],
+)
+
+closure_js_library(
+    name = "wycheproof_testvectors",
+    testonly = 1,
+    srcs = [
+        ":wycheproof_ecdh_testvectors",
+        ":wycheproof_ecdsa_testvectors",
     ],
 )
 

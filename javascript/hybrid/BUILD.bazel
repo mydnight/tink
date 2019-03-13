@@ -6,7 +6,7 @@ package(
 
 licenses(["notice"])  # Apache 2.0
 
-load("@io_bazel_rules_closure//closure:defs.bzl", "closure_js_library")
+load("@io_bazel_rules_closure//closure:defs.bzl", "closure_js_library", "closure_js_test")
 
 closure_js_library(
     name = "hybrid",
@@ -146,12 +146,25 @@ closure_js_library(
 
 # test
 
-closure_js_library(
+closure_js_test(
     name = "test_lib",
     testonly = 1,
     srcs = glob([
         "*_test.js",
     ]),
+    entry_points = {
+        "ecies_aead_hkdf_private_key_manager_test.js": ["tink.hybrid.EciesAeadHkdfPrivateKeyManagerTest"],
+        "ecies_aead_hkdf_public_key_manager_test.js": ["tink.hybrid.EciesAeadHkdfPublicKeyManagerTest"],
+        "ecies_aead_hkdf_util_test.js": ["tink.hybrid.EciesAeadHkdfUtilTest"],
+        "ecies_aead_hkdf_validators_test.js": ["tink.hybrid.EciesAeadHkdfValidatorsTest"],
+        "hybrid_config_test.js": ["tink.hybrid.HybridConfigTest"],
+        "hybrid_decrypt_catalogue_test.js": ["tink.hybrid.HybridDecryptCatalogueTest"],
+        "hybrid_decrypt_wrapper_test.js": ["tink.hybrid.HybridDecryptWrapperTest"],
+        "hybrid_encrypt_catalogue_test.js": ["tink.hybrid.HybridEncryptCatalogueTest"],
+        "hybrid_encrypt_wrapper_test.js": ["tink.hybrid.HybridEncryptWrapperTest"],
+        "hybrid_key_templates_test.js": ["tink.hybrid.HybridKeyTemplatesTest"],
+        "registry_ecies_aead_hkdf_dem_helper_test.js": ["tink.hybrid.RegistryEciesAeadHkdfDemHelperTest"],
+    },
     deps = [
         "//javascript/hybrid",
         "//javascript:crypto_format",

@@ -6,7 +6,7 @@ package(
 
 licenses(["notice"])  # Apache 2.0
 
-load("@io_bazel_rules_closure//closure:defs.bzl", "closure_js_library")
+load("@io_bazel_rules_closure//closure:defs.bzl", "closure_js_library", "closure_js_test")
 
 closure_js_library(
     name = "aead",
@@ -126,12 +126,20 @@ closure_js_library(
 
 # test
 
-closure_js_library(
+closure_js_test(
     name = "test_lib",
     testonly = 1,
     srcs = glob([
         "*_test.js",
     ]),
+    entry_points = {
+        "aead_catalogue_test.js": ["tink.aead.AeadCatalogueTest"],
+        "aead_config_test.js": ["tink.aead.AeadConfigTest"],
+        "aead_key_templates_test.js": ["tink.aead.AeadKeyTemplatesTest"],
+        "aead_wrapper_test.js": ["tink.aead.AeadWrapperTest"],
+        "aes_ctr_hmac_aead_key_manager_test.js": ["tink.aead.AesCtrHmacAeadKeyManagerTest"],
+        "aes_gcm_key_manager_test.js": ["tink.aead.AesGcmKeyManagerTest"],
+    },
     deps = [
         "//javascript/aead",
         "//javascript/exception",

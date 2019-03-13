@@ -203,6 +203,20 @@ closure_js_test(
     srcs = glob([
         "*_test.js",
     ]),
+    entry_points = {
+        "binary_keyset_reader_test.js": ["tink.BinaryKeysetReaderTest"],
+        "cleartext_keyset_handle_test.js": ["tink.CleartextKeysetHandleTest"],
+        "config_test.js": ["tink.ConfigTest"],
+        "crypto_format_test.js": ["tink.CryptoFormatTest"],
+        "keyset_handle_test.js": ["tink.KeysetHandleTest"],
+        "primitive_set_test.js": ["tink.PrimitiveSetTest"],
+        "proto_test.js": ["tink.ProtoTest"],
+        "registry_test.js": ["tink.RegistryTest"],
+        "util_test.js": ["tink.UtilTest"],
+    },
+    suppress = [
+        "reportUnknownTypes",
+    ],
     deps = [
         ":binary_reader",
         ":catalogue",
@@ -219,6 +233,7 @@ closure_js_test(
         "//javascript/aead",
         "//javascript/hybrid",
         "//javascript/subtle",
+        "//javascript/subtle:aead",
         "//javascript/exception",
         "//proto:aes_ctr_closure_proto",
         "//proto:aes_ctr_hmac_aead_closure_proto",

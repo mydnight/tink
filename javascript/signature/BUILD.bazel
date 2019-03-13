@@ -6,7 +6,7 @@ package(
 
 licenses(["notice"])  # Apache 2.0
 
-load("@io_bazel_rules_closure//closure:defs.bzl", "closure_js_library")
+load("@io_bazel_rules_closure//closure:defs.bzl", "closure_js_library", "closure_js_test")
 
 closure_js_library(
     name = "signature",
@@ -123,12 +123,22 @@ closure_js_library(
 
 # test
 
-closure_js_library(
+closure_js_test(
     name = "test_lib",
     testonly = 1,
     srcs = glob([
         "*_test.js",
     ]),
+    entry_points = {
+        "ecdsa_private_key_manager_test.js": ["tink.signature.EcdsaPrivateKeyManagerTest"],
+        "ecdsa_public_key_manager_test.js": ["tink.signature.EcdsaPublicKeyManagerTest"],
+        "public_key_sign_catalogue_test.js": ["tink.signature.PublicKeySignCatalogueTest"],
+        "public_key_sign_wrapper_test.js": ["tink.signature.PublicKeySignWrapperTest"],
+        "public_key_verify_catalogue_test.js": ["tink.signature.PublicKeyVerifyCatalogueTest"],
+        "public_key_verify_wrapper_test.js": ["tink.signature.PublicKeyVerifyWrapperTest"],
+        "signature_config_test.js": ["tink.signature.SignatureConfigTest"],
+        "signature_key_templates_test.js": ["tink.signature.SignatureKeyTemplatesTest"],
+    },
     deps = [
         "//javascript/signature",
         "//javascript/subtle",
