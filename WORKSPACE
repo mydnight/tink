@@ -120,11 +120,11 @@ http_archive(
 
 http_archive(
     name = "io_bazel_rules_closure",
-    sha256 = "a3a5a79f2cf07fdbadcb5cca7aee38ed777d659a080401752e9f0db7447e1067",
-    strip_prefix = "rules_closure-4bbd7a4641d6ab7d7bb7ddf699067e12a4faee1a",
+    sha256 = "4a191c77dc5db72059c59caedcd29b2ebc97bfdd4bf14c05d0e8336f1bcca32a",
+    strip_prefix = "rules_closure-9dacdca6339e7498be2a5b791d4dfbd37e41bb65",
     urls = [
         # FIXME: michaelfig -> bazelbuild
-        "https://github.com/michaelfig/rules_closure/archive/4bbd7a4641d6ab7d7bb7ddf699067e12a4faee1a.zip",
+        "https://github.com/michaelfig/rules_closure/archive/9dacdca6339e7498be2a5b791d4dfbd37e41bb65.zip",
     ],
 )
 
