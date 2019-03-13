@@ -120,13 +120,18 @@ http_archive(
 
 http_archive(
     name = "io_bazel_rules_closure",
-    sha256 = "b346a07fd2faabcd44e46686d4053f3f69cf0f311652217fd2f186dd1fdfae4b",
-    strip_prefix = "rules_closure-206a32c6e15cd8c0b79f8cbe747d07f56ad0d100",
+    sha256 = "a3a5a79f2cf07fdbadcb5cca7aee38ed777d659a080401752e9f0db7447e1067",
+    strip_prefix = "rules_closure-4bbd7a4641d6ab7d7bb7ddf699067e12a4faee1a",
     urls = [
         # FIXME: michaelfig -> bazelbuild
-        "https://github.com/michaelfig/rules_closure/archive/206a32c6e15cd8c0b79f8cbe747d07f56ad0d100.zip",
+        "https://github.com/michaelfig/rules_closure/archive/4bbd7a4641d6ab7d7bb7ddf699067e12a4faee1a.zip",
     ],
 )
+
+#local_repository(
+#    name = "io_bazel_rules_closure",
+#    path = "/Users/michael/src/self/rules_closure",
+#)
 
 
 load("@io_bazel_rules_closure//closure:defs.bzl", "closure_repositories")

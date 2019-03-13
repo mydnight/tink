@@ -22,6 +22,7 @@ closure_js_library(
 
 closure_js_library(
     name = "utils",
+    lenient = True,
     srcs = [
         "ecdsa_util.js",
     ],
@@ -37,6 +38,7 @@ closure_js_library(
 
 closure_js_library(
     name = "ecdsa_key_managers",
+    lenient = True,
     srcs = [
         "ecdsa_private_key_manager.js",
         "ecdsa_public_key_manager.js",
@@ -58,6 +60,7 @@ closure_js_library(
 
 closure_js_library(
     name = "wrappers",
+    lenient = True,
     srcs = [
         "public_key_sign_wrapper.js",
         "public_key_verify_wrapper.js",
@@ -76,6 +79,7 @@ closure_js_library(
 
 closure_js_library(
     name = "catalogues",
+    lenient = True,
     srcs = [
         "public_key_sign_catalogue.js",
         "public_key_verify_catalogue.js",
@@ -92,6 +96,7 @@ closure_js_library(
 
 closure_js_library(
     name = "config",
+    lenient = True,
     srcs = [
         "signature_config.js",
     ],
@@ -109,6 +114,7 @@ closure_js_library(
 
 closure_js_library(
     name = "key_templates",
+    lenient = True,
     srcs = [
         "signature_key_templates.js",
     ],
@@ -126,6 +132,7 @@ closure_js_library(
 closure_js_test(
     name = "test_lib",
     testonly = 1,
+    lenient = True,
     srcs = glob([
         "*_test.js",
     ]),
