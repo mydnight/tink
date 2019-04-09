@@ -1,3 +1,5 @@
+package(default_visibility = ["//tools/build_defs:internal_pkg"])  # keep
+
 load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
 
 go_library(
@@ -5,9 +7,9 @@ go_library(
     srcs = [
         "constant.go",
         "testutil.go",
+        "wycheproofutil.go",
     ],
     importpath = "github.com/google/tink/go/testutil",
-    visibility = ["//visibility:public"],
     deps = [
         "//go/aead:go_default_library",
         "//go/core/registry:go_default_library",
@@ -35,7 +37,13 @@ go_library(
 
 go_test(
     name = "go_default_test",
-    srcs = ["testutil_test.go"],
+    srcs = [
+        "testutil_test.go",
+        "wycheproofutil_test.go",
+    ],
+    data = [
+        "@wycheproof//testvectors:all",
+    ],
     deps = [
         "//go/testutil:go_default_library",
         "//go/tink:go_default_library",

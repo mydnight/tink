@@ -7,7 +7,9 @@ filegroup(
     testonly = 1,
     srcs = [
         "credential.json",
-    ],
+        "credentials_aws.csv",
+        "README_AWS.txt",
+],
 )
 
 filegroup(

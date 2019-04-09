@@ -1,3 +1,5 @@
+package(default_visibility = ["//tools/build_defs:internal_pkg"])  # keep
+
 load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
 
 go_library(
@@ -6,7 +8,6 @@ go_library(
         "aes_siv.go",
     ],
     importpath = "github.com/google/tink/go/subtle/daead",
-    visibility = ["//visibility:public"],
     deps = [
         "//go/tink:go_default_library",
     ],

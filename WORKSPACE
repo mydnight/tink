@@ -616,10 +616,8 @@ load("@io_bazel_rules_go//go:deps.bzl", "go_rules_dependencies", "go_register_to
 go_rules_dependencies()
 go_register_toolchains(nogo="@//go:tink_nogo")
 
-load("@bazel_gazelle//:deps.bzl", "gazelle_dependencies")
+load("@bazel_gazelle//:deps.bzl", "gazelle_dependencies", "go_repository")
 gazelle_dependencies()
-
-load("@bazel_gazelle//:deps.bzl", "go_repository")
 
 go_repository(
     name = "org_golang_x_crypto",
@@ -651,6 +649,13 @@ go_repository(
     importpath = "cloud.google.com/go",
 )
 
+go_repository(
+    name = "com_github_aws_sdk_go",
+    commit = "182cda27d0921b14139ff6d352c09e0cb20e4578",
+    importpath = "github.com/aws/aws-sdk-go",
+)
+
+
 #-----------------------------------------------------------------------------
 # Javascript
 #-----------------------------------------------------------------------------
@@ -668,3 +673,4 @@ http_archive(
 load("@io_bazel_rules_closure//closure:defs.bzl", "closure_repositories")
 
 closure_repositories()
+

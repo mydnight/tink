@@ -58,7 +58,7 @@ public final class PrimitiveSet<P> {
     // The actual primitive.
     private final P primitive;
     // Identifies the primitive within the set.
-    // It is the ciphertext prefix of the correponding key.
+    // It is the ciphertext prefix of the corresponding key.
     private final byte[] identifier;
     // The status of the key represented by the primitive.
     private final KeyStatusType status;
@@ -103,18 +103,23 @@ public final class PrimitiveSet<P> {
   }
 
   /** @return all primitives using RAW prefix. */
-  public List<Entry<P>> getRawPrimitives() throws GeneralSecurityException {
+  public List<Entry<P>> getRawPrimitives() {
     return getPrimitive(CryptoFormat.RAW_PREFIX);
   }
 
   /** @return the entries with primitive identifed by {@code identifier}. */
-  public List<Entry<P>> getPrimitive(final byte[] identifier) throws GeneralSecurityException {
+  public List<Entry<P>> getPrimitive(final byte[] identifier) {
     List<Entry<P>> found = primitives.get(new String(identifier, UTF_8));
     return found != null ? found : Collections.<Entry<P>>emptyList();
   }
 
+  /** Returns the entries with primitives identified by the ciphertext prefix of {@code key}. */
+  protected List<Entry<P>> getPrimitive(Keyset.Key key) throws GeneralSecurityException {
+    return getPrimitive(CryptoFormat.getOutputPrefix(key));
+  }
+
   /** @return all primitives */
-  public Collection<List<Entry<P>>> getAll() throws GeneralSecurityException {
+  public Collection<List<Entry<P>>> getAll() {
     return primitives.values();
   }
 
@@ -137,13 +142,19 @@ public final class PrimitiveSet<P> {
     return new PrimitiveSet<P>(primitiveClass);
   }
 
-  /** @return the entries with primitives identified by the ciphertext prefix of {@code key}. */
-  protected List<Entry<P>> getPrimitive(Keyset.Key key) throws GeneralSecurityException {
-    return getPrimitive(CryptoFormat.getOutputPrefix(key));
-  }
-
   /** Sets given Entry {@code primary} as the primary one. */
   public void setPrimary(final Entry<P> primary) {
+    if (primary == null) {
+      throw new IllegalArgumentException("the primary entry must be non-null");
+    }
+    if (primary.getStatus() != KeyStatusType.ENABLED) {
+      throw new IllegalArgumentException("the primary entry has to be ENABLED");
+    }
+    List<Entry<P>> entries = getPrimitive(primary.getIdentifier());
+    if (entries.isEmpty()) {
+      throw new IllegalArgumentException(
+          "the primary entry cannot be set to an entry which is not held by this primitive set");
+    }
     this.primary = primary;
   }
 
@@ -154,6 +165,9 @@ public final class PrimitiveSet<P> {
    */
   public Entry<P> addPrimitive(final P primitive, Keyset.Key key)
       throws GeneralSecurityException {
+    if (key.getStatus() != KeyStatusType.ENABLED) {
+      throw new GeneralSecurityException("only ENABLED key is allowed");
+    }
     Entry<P> entry =
         new Entry<P>(
             primitive,

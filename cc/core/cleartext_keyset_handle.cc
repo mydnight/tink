@@ -46,6 +46,25 @@ util::StatusOr<std::unique_ptr<KeysetHandle>> CleartextKeysetHandle::Read(
 }
 
 // static
+crypto::tink::util::Status CleartextKeysetHandle::Write(
+    KeysetWriter* writer, const KeysetHandle& keyset_handle) {
+  if (!writer) {
+    return ToStatusF(util::error::INVALID_ARGUMENT,
+                     "Error KeysetWriter cannot be null");
+  }
+  return writer->Write(keyset_handle.get_keyset());
+}
+
+// static
+std::unique_ptr<KeysetHandle> CleartextKeysetHandle::GetKeysetHandle(
+    const Keyset& keyset) {
+  auto unique_keyset = absl::make_unique<Keyset>(keyset);
+  std::unique_ptr<KeysetHandle> handle =
+      absl::WrapUnique(new KeysetHandle(std::move(unique_keyset)));
+  return handle;
+}
+
+// static
 const Keyset& CleartextKeysetHandle::GetKeyset(
     const KeysetHandle& keyset_handle) {
   return keyset_handle.get_keyset();

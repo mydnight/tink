@@ -299,6 +299,71 @@ cc_library(
 )
 
 cc_library(
+    name = "aes_gcm_hkdf_stream_segment_decrypter",
+    srcs = ["aes_gcm_hkdf_stream_segment_decrypter.cc"],
+    hdrs = ["aes_gcm_hkdf_stream_segment_decrypter.h"],
+    include_prefix = "tink",
+    strip_include_prefix = "/cc",
+    deps = [
+        ":aes_gcm_hkdf_stream_segment_encrypter",
+        ":common_enums",
+        ":hkdf",
+        ":random",
+        ":stream_segment_decrypter",
+        ":subtle_util_boringssl",
+        "//cc/util:errors",
+        "//cc/util:status",
+        "//cc/util:statusor",
+        "@boringssl//:crypto",
+        "@com_google_absl//absl/strings",
+    ],
+)
+
+cc_library(
+    name = "aes_gcm_hkdf_stream_segment_encrypter",
+    srcs = ["aes_gcm_hkdf_stream_segment_encrypter.cc"],
+    hdrs = ["aes_gcm_hkdf_stream_segment_encrypter.h"],
+    include_prefix = "tink",
+    strip_include_prefix = "/cc",
+    deps = [
+        ":random",
+        ":stream_segment_encrypter",
+        ":subtle_util_boringssl",
+        "//cc/util:errors",
+        "//cc/util:status",
+        "//cc/util:statusor",
+        "@boringssl//:crypto",
+        "@com_google_absl//absl/strings",
+    ],
+)
+
+cc_library(
+    name = "aes_gcm_hkdf_streaming",
+    srcs = ["aes_gcm_hkdf_streaming.cc"],
+    hdrs = ["aes_gcm_hkdf_streaming.h"],
+    include_prefix = "tink",
+    strip_include_prefix = "/cc",
+    deps = [
+        ":aes_gcm_hkdf_stream_segment_decrypter",
+        ":aes_gcm_hkdf_stream_segment_encrypter",
+        ":common_enums",
+        ":hkdf",
+        ":nonce_based_streaming_aead",
+        ":random",
+        ":stream_segment_decrypter",
+        ":stream_segment_encrypter",
+        ":subtle_util_boringssl",
+        "//cc:input_stream",
+        "//cc:output_stream",
+        "//cc/util:errors",
+        "//cc/util:status",
+        "//cc/util:statusor",
+        "@boringssl//:crypto",
+        "@com_google_absl//absl/strings",
+    ],
+)
+
+cc_library(
     name = "aes_eax_boringssl",
     srcs = ["aes_eax_boringssl.cc"],
     hdrs = ["aes_eax_boringssl.h"],
@@ -463,12 +528,37 @@ cc_library(
 )
 
 cc_library(
+    name = "stream_segment_decrypter",
+    hdrs = ["stream_segment_decrypter.h"],
+    include_prefix = "tink",
+    strip_include_prefix = "/cc",
+    deps = [
+        "//cc/util:status",
+    ],
+)
+
+cc_library(
     name = "stream_segment_encrypter",
     hdrs = ["stream_segment_encrypter.h"],
     include_prefix = "tink",
     strip_include_prefix = "/cc",
     deps = [
         "//cc/util:status",
+    ],
+)
+
+cc_library(
+    name = "streaming_aead_decrypting_stream",
+    srcs = ["streaming_aead_decrypting_stream.cc"],
+    hdrs = ["streaming_aead_decrypting_stream.h"],
+    include_prefix = "tink",
+    strip_include_prefix = "/cc",
+    deps = [
+        ":stream_segment_decrypter",
+        "//cc:input_stream",
+        "//cc/util:status",
+        "//cc/util:statusor",
+        "@com_google_absl//absl/memory",
     ],
 )
 
@@ -481,6 +571,7 @@ cc_library(
     deps = [
         ":stream_segment_encrypter",
         "//cc:output_stream",
+        "//cc/util:status",
         "//cc/util:statusor",
         "@com_google_absl//absl/memory",
     ],
@@ -493,12 +584,33 @@ cc_library(
     include_prefix = "tink",
     strip_include_prefix = "/cc",
     deps = [
+        ":stream_segment_decrypter",
         ":stream_segment_encrypter",
+        ":streaming_aead_decrypting_stream",
         ":streaming_aead_encrypting_stream",
         "//cc:input_stream",
         "//cc:output_stream",
         "//cc:streaming_aead",
         "//cc/util:statusor",
+        "@com_google_absl//absl/strings",
+    ],
+)
+
+cc_library(
+    name = "test_util",
+    testonly = 1,
+    srcs = ["test_util.cc"],
+    hdrs = ["test_util.h"],
+    include_prefix = "tink",
+    strip_include_prefix = "/cc",
+    deps = [
+        ":stream_segment_decrypter",
+        ":stream_segment_encrypter",
+        "//cc:input_stream",
+        "//cc:output_stream",
+        "//cc/util:status",
+        "//cc/util:statusor",
+        "@com_google_absl//absl/memory",
         "@com_google_absl//absl/strings",
     ],
 )
@@ -600,6 +712,64 @@ cc_test(
         "@com_google_absl//absl/strings",
         "@com_google_googletest//:gtest_main",
         "@rapidjson",
+    ],
+)
+
+cc_test(
+    name = "aes_gcm_hkdf_stream_segment_decrypter_test",
+    size = "small",
+    srcs = ["aes_gcm_hkdf_stream_segment_decrypter_test.cc"],
+    deps = [
+        ":aes_gcm_hkdf_stream_segment_decrypter",
+        ":aes_gcm_hkdf_stream_segment_encrypter",
+        ":common_enums",
+        ":hkdf",
+        ":random",
+        ":stream_segment_decrypter",
+        ":stream_segment_encrypter",
+        "//cc/util:status",
+        "//cc/util:statusor",
+        "//cc/util:test_util",
+        "@com_google_absl//absl/memory",
+        "@com_google_absl//absl/strings",
+        "@com_google_googletest//:gtest_main",
+    ],
+)
+
+cc_test(
+    name = "aes_gcm_hkdf_stream_segment_encrypter_test",
+    size = "small",
+    srcs = ["aes_gcm_hkdf_stream_segment_encrypter_test.cc"],
+    deps = [
+        ":aes_gcm_hkdf_stream_segment_encrypter",
+        ":random",
+        ":stream_segment_encrypter",
+        "//cc/util:status",
+        "//cc/util:statusor",
+        "//cc/util:test_util",
+        "@com_google_absl//absl/memory",
+        "@com_google_absl//absl/strings",
+        "@com_google_googletest//:gtest_main",
+    ],
+)
+
+cc_test(
+    name = "aes_gcm_hkdf_streaming_test",
+    size = "small",
+    srcs = ["aes_gcm_hkdf_streaming_test.cc"],
+    deps = [
+        ":aes_gcm_hkdf_streaming",
+        ":common_enums",
+        ":random",
+        ":test_util",
+        "//cc:output_stream",
+        "//cc/util:istream_input_stream",
+        "//cc/util:ostream_output_stream",
+        "//cc/util:status",
+        "//cc/util:statusor",
+        "//cc/util:test_util",
+        "@com_google_absl//absl/strings",
+        "@com_google_googletest//:gtest_main",
     ],
 )
 
@@ -935,6 +1105,27 @@ cc_test(
 )
 
 cc_test(
+    name = "streaming_aead_decrypting_stream_test",
+    size = "medium",
+    srcs = ["streaming_aead_decrypting_stream_test.cc"],
+    copts = ["-Iexternal/gtest/include"],
+    linkopts = ["-lpthread"],
+    deps = [
+        ":random",
+        ":stream_segment_decrypter",
+        ":streaming_aead_decrypting_stream",
+        ":test_util",
+        "//cc:input_stream",
+        "//cc/util:istream_input_stream",
+        "//cc/util:status",
+        "//cc/util:statusor",
+        "@com_google_absl//absl/memory",
+        "@com_google_absl//absl/strings",
+        "@com_google_googletest//:gtest_main",
+    ],
+)
+
+cc_test(
     name = "streaming_aead_encrypting_stream_test",
     size = "medium",
     srcs = ["streaming_aead_encrypting_stream_test.cc"],
@@ -944,6 +1135,7 @@ cc_test(
         ":random",
         ":stream_segment_encrypter",
         ":streaming_aead_encrypting_stream",
+        ":test_util",
         "//cc:output_stream",
         "//cc/util:ostream_output_stream",
         "//cc/util:status",

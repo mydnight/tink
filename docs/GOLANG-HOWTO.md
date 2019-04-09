@@ -8,7 +8,7 @@ accomplishing some common cryptographic tasks using [Tink](https://github.com/go
 To install Tink locally run
 
 ```sh
-go get github.com/google/tink/go
+go get github.com/google/tink/go/...
 ```
 
 to run all the tests locally
@@ -176,7 +176,7 @@ package main
 import (
     "fmt"
 
-    "github.com/google/tink/go/aead"
+    "github.com/google/tink/go/signature"
     "github.com/google/tink/go/keyset"
 )
 
@@ -214,7 +214,39 @@ usually is public data implicit from the context, but should be bound to the res
 ciphertext, i.e. the ciphertext allows for checking the integrity of contextInfo (but
 there are no guarantees wrt. the secrecy or authenticity of contextInfo).
 
-<!--TODO:baskaran@ add example code here-->
+```go
+package main
+
+import (
+    "github.com/google/tink/go/hybrid"
+    "github.com/google/tink/go/core/registry"
+    "github.com/google/tink/go/keyset"
+)
+
+
+func main() {
+
+    kh , err := keyset.NewHandle(hybrid.ECIESHKDFAES128CTRHMACSHA256KeyTemplate())
+    if err != nil {
+        //handle error
+    }
+    h := hybrid.NewHybridEncrypt(kh)
+
+    ct, err = h.Encrypt([]byte("secret message"), []byte("context info"))
+    if err != nil {
+        // handle error
+    }
+
+    khd , err := keyset.NewHandle( .....); /// get a handle on the decryption key material
+    hd := hybrid.NewHybridDecrypt(khd)
+
+    pt, err := hd.Decrypt(ct, []byte("context info"))
+    if err != nil {
+        // handle error
+    }
+}
+
+```
 
 
 ### Envelope Encryption
@@ -349,18 +381,18 @@ func main() {
     // Write encrypts the keyset handle with the master key and
     // writes to the io.Writer implementation(memKeyset)
     // We recommend you encrypt the keyset handle before persisting.
-    if err := h.Write(memKeyset, masterKey); err != nil {
+    if err := kh.Write(memKeyset, masterKey); err != nil {
         // handle error
     }
 
     // Read reads the encrypted keyset handle back from the io.Reader implementation
     // and decrypts it using the master key.
-    h2, err := keyset.Read(memKeyset, masterKey)
+    kh2, err := keyset.Read(memKeyset, masterKey)
     if err != nil {
         // handle error
     }
 
-    if !proto.Equal(h.Keyset(), h2.Keyset()) {
+    if !proto.Equal(kh.Keyset(), kh2.Keyset()) {
         // handle error
     }
 }
